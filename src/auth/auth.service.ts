@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schema/user.schema';
@@ -13,22 +13,40 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(createUserDto: CreateAuthDto): Promise<User> {
-    const { name, email, password } = createUserDto;
-    const hashedPassword = await bcrypt.hash(password, 10);
+  async register(createUserDto: CreateAuthDto): Promise<string> {
+    try {
+      console.log(createUserDto, 'createUserDto');
+      const { name, email, password } = createUserDto;
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const user = await this.userModel.findOne({ email: email }).exec();
+      console.log(user, 'user');
+      if (!user) {
+        const createdUser = new this.userModel({
+          name,
+          email,
+          password: hashedPassword,
+        });
 
-    const createdUser = new this.userModel({
-      name,
-      email,
-      password: hashedPassword,
-    });
+        const result = createdUser.save();
+        console.log(result, 'result');
+        return 'success';
+      }
 
-    return createdUser.save();
+      return 'existed';
+    } catch (error) {
+      console.error('数据库操作错误:', error);
+      // 返回适当的错误响应
+      throw new BadRequestException('发生了重复键错误');
+    }
   }
 
   async validateUser(email: string, password: string) {
-    const user = await this.userModel.findOne({ email }).exec();
-
+    const user = await this.userModel.findOne({ email: email }).exec();
+    console.log('user', user);
+    if (!user) {
+      console.log('EXECUTE');
+      return null;
+    }
     console.log(user, email, password, bcrypt.compare(password, user.password));
     if (user && bcrypt.compare(password, user.password)) {
       const result = user.toObject();
@@ -45,6 +63,8 @@ export class AuthService {
     console.log('access_token', access_token);
     return {
       access_token,
+      status: 'success',
+      email: user.email,
     };
   }
 }

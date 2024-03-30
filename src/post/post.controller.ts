@@ -20,11 +20,11 @@ export class PostController {
     return this.postsService.findAll();
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const post = await this.postsService.findOne(id);
+  @Get(':username')
+  async findOne(@Param('username') username: string) {
+    const post = await this.postsService.findOne(username);
     if (!post) {
-      throw new NotFoundException(`Post with ID ${id} not found`);
+      throw new NotFoundException(`Post with ID ${username} not found`);
     }
     return post;
   }

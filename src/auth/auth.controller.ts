@@ -16,20 +16,21 @@ export class AuthController {
 
   @Post('api/register')
   async register(@Body() createUserDto: CreateAuthDto) {
-    console.log('register');
+    console.log('register', createUserDto);
     return this.authService.register(createUserDto);
   }
 
   @UseGuards(AuthGuard('local'))
   @Post('api/login')
   async login(@Request() req) {
-    console.log(req.user, 'req in auth');
+    console.log(req.user, 'req in login');
     return this.authService.login(req.user);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('api/profile')
   getProfile(@Request() req) {
+    console.log(req.user, 'req');
     return req.user;
   }
 }
