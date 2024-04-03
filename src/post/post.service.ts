@@ -12,7 +12,6 @@ export class PostService {
   ) {}
 
   async findAll(): Promise<Post[]> {
-    console.log('PostService:findAll');
     return this.postModel.find().exec();
   }
 
@@ -33,7 +32,6 @@ export class PostService {
   //
   async remove(id: string): Promise<any> {
     const result = await this.postModel.deleteOne({ _id: id }).exec();
-    console.log(result, 'result in remove');
     return result;
   }
 }

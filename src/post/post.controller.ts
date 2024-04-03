@@ -16,12 +16,10 @@ export class PostController {
 
   @Delete('/delete/:id')
   async remove(@Param('id') id: string) {
-    console.log(id, 'id in delete');
     return this.postsService.remove(id);
   }
   @Get()
   async findAll() {
-    console.log('PostController:findAll');
     return this.postsService.findAll();
   }
 
@@ -36,7 +34,6 @@ export class PostController {
 
   @Post()
   async create(@Body() createPostDto: CreatePostDto) {
-    console.log('PostController:create');
     return this.postsService.create(createPostDto);
   }
   //
