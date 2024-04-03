@@ -22,7 +22,11 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, document);
 
-  app.use(logger('dev'));
+  app.use(
+    logger(
+      ':date[clf] ":method :url :status :res[content-length] - :response-time ms"',
+    ),
+  );
   await app.listen(3000);
 }
 bootstrap();

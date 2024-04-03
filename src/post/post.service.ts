@@ -31,7 +31,9 @@ export class PostService {
   //     .exec();
   // }
   //
-  async remove(id: string): Promise<void> {
-    await this.postModel.deleteOne({ id: id }).exec();
+  async remove(id: string): Promise<any> {
+    const result = await this.postModel.deleteOne({ _id: id }).exec();
+    console.log(result, 'result in remove');
+    return result;
   }
 }

@@ -9,9 +9,9 @@ export class Post {
   title: string;
 
   @Prop()
-  des: string;
+  desc: string;
 
-  @Prop({ required: true })
+  @Prop()
   img: string;
 
   @Prop({ required: true })

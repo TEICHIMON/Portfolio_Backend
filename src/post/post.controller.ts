@@ -10,10 +10,15 @@ import {
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 
-@Controller('api/post')
+@Controller('api/posts')
 export class PostController {
   constructor(private readonly postsService: PostService) {}
 
+  @Delete('/delete/:id')
+  async remove(@Param('id') id: string) {
+    console.log(id, 'id in delete');
+    return this.postsService.remove(id);
+  }
   @Get()
   async findAll() {
     console.log('PostController:findAll');
@@ -40,8 +45,4 @@ export class PostController {
   //   return this.postsService.update(id, updatePostDto);
   // }
   //
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return this.postsService.remove(id);
-  }
 }
